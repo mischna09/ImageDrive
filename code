@@ -1,0 +1,40 @@
+		AREA PROG1, CODE,READONLY
+		ENTRY
+		EXPORT __main
+__main
+		macro 
+$label		SWAP $va,$vb
+$label		eor $va,$va,$vb
+			eor $vb,$va,$vb
+			eor $va,$va,$vb
+              mend
+			  
+		macro 
+$label		findmin $Data,$va,$vb
+			mov  r5,$va
+			ldr	 r2, [$Data,$va]
+loop2
+			ldr	 r3, [$Data,r5]
+			cmp	 r2,r3
+			movlt r2,r3
+			movlt r4,r5
+			add	 r5,#1
+			cmp	 r5,$vb
+			ble 	loop2
+              mend
+
+			ldr	r1,Data
+			mov	r6,#0
+loop		add	r6,#1
+			findmin	r1,r6,#0x0c
+			ldr r10,[r1,r4]
+			ldr r11,[r1,r6]
+			SWAP r10,r11
+
+stop b stop 
+		area data1, data, readonly
+Data	dcb  2,5,3,4,7,9,8,10,12,1,13,14
+		area data2, data, readwrite
+base space 18
+
+		END
